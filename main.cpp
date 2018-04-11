@@ -21,14 +21,11 @@ using namespace std;
 vector<Node*> huffTree;
 map<char, int> charFreq;
 map<char, string> huffCodes;
-int comp;
-int exch;
-string divider = "-----------------------------------------";
+
 
 
 // convert a group of 8 digits to a character
-char bin_to_ascii(string group)
-{
+char bin_to_ascii(string group) {
     bitset<8> temp(group);
     return temp.to_ulong();
 }
@@ -41,8 +38,8 @@ void traverse(Node* n, string code){
         huffCodes[n->getChar()] = code; //add getChar() to hashMap with encoding as its value
         return;
     }
-    traverse(n->getLeft(), code +"0");
-    traverse(n->getRight(), code+"1");
+    traverse(n->getLeft(), code + "0");
+    traverse(n->getRight(), code + "1");
 }
 
 //partition algorithm
@@ -59,7 +56,6 @@ int partition(int p, int r) {
     //j=bottom bound of the array
     for (int j = p; j <= r-1; j++) {
         //count number of comparisons
-        comp++;
         
         //actual comparison of the bottom bound and the pivot.  if bottom bound is greater than the pivot,
         //then the indice holder for the lower array is increased (i), and the object in comparison (A[j]) is switched
@@ -69,14 +65,12 @@ int partition(int p, int r) {
             tmp1 = huffTree[i];
             huffTree[i] = huffTree[j];
             huffTree[j] = tmp1;
-            exch++;
         }
         
     }
     tmp2 = huffTree[i+1];
     huffTree[i+1] = huffTree[r];
     huffTree[r] = tmp2;
-    exch++;
     return i+1;
 }
 
@@ -95,9 +89,6 @@ int main(int argc, const char * argv[]) {
     time_t endTotal;
     startTotal = clock();
     
-    
-    
-    
     /*!-------STEP 1. counting the frequencies-------!*/
     time_t startFreq;
     time_t endFreq;
@@ -114,11 +105,12 @@ int main(int argc, const char * argv[]) {
         cout << "File can not be opened. Try again" << endl;
         exit(1);
     }
-    
+    string input;
     //get char method -- get char and increment the freq in the map
     char c;
     while (file.get(c)){
-        charFreq[c]++;
+        charFreq[c]++; // char -- frequency
+        input += c;
     }
     
     endFreq = clock();
@@ -145,8 +137,7 @@ int main(int argc, const char * argv[]) {
     quickSort(0, iterator-1);
     
     //connect the nodes in huffman style
-    
-    int huffSize = huffTree.size();
+        int huffSize = huffTree.size();
     //int q = huffSize;
     for (int i = 1; i <= huffSize-1; i++){
         Node* z = new Node(huffTree[0],huffTree[1]);
@@ -175,18 +166,13 @@ int main(int argc, const char * argv[]) {
     time_t diffTraverse = endTraverse - startTraverse;
     cout << "Assigning Huff Codes: " << ((float)diffTraverse/CLOCKS_PER_SEC) << endl;
     
-    
-    
-    
     /* !-------------------- Step 4. Writing the header for the compressed file ----------------! */
     //write reorganized data to new file
     time_t startWriting;
     time_t endWriting;
     startWriting = clock();
     
-    
     //naming the output file name the same as the input file name.
-    
     int n = inputfile.length();
     string prefix = inputfile.substr(0, n-4); //grab everything but the .txt
     string outfile = prefix + ".zip301"; //append .zip301 to the end of the file
@@ -230,7 +216,8 @@ int main(int argc, const char * argv[]) {
     time_t binToAe;
     
     startConvert = clock();
-    
+    countChars2 = clock();
+
     
     //place the ifstream object's pointer to the beginning of the file
     file.clear(); //clear the "fail bit"
@@ -239,33 +226,11 @@ int main(int argc, const char * argv[]) {
     int fileLen=0; //helper string to store binary encoding to
     string bin;
    // string outputS="";
-    countChars2 = clock();
     
-    while (file.get(c)){
-        //fileLen++;
-        bin+=huffCodes[c]; //add the char to the output string
-        /*
-        for (char cc : bin){
-            outputS += cc;
-            if (outputS.length() == 8){
-                ofs<< bin_to_ascii(outputS);
-                outputS = "";
-            }
-        }
-         */
+    for (char c : input){
+        bin+=huffCodes[c];
     }
-    //ofs << "write test" << endl;
-    //ofs << bin << endl;
-    
-    /*if (8 - outputS.length() > 0 ){
-        for (int i = 0; i < 8-outputS.length(); i++){
-            outputS+='0';
-        }
-        //ofs << bin_to_ascii(outputS);
-    }
-    cout << "got past the bin_to_ascii" << endl;
-    */
-    
+ 
     countChars2e = clock();
     time_t diff = countChars2e - countChars2;
     cout << "countChars2: " << ((float)diff/CLOCKS_PER_SEC) << endl;
@@ -280,15 +245,13 @@ int main(int argc, const char * argv[]) {
             bin += "0";
         }
     }
+
     
-    
-    //addZeroe = clock();
-    //diff = addZeroe-addZero;
-    //cout << "addZero: " << ((float)diff/CLOCKS_PER_SEC) << endl;
-    string output;
+    //start the bin to ASCII algorithm
     binToA = clock();
     //change binary into ASCII chars
     //creating helper string to output as ASCII chars
+    string output;
     for (char c : bin){
         output+=c; //add the char to the output string
         if (output.size() == 8){ //if the output string len == 8 --> switch it to an ASCII char and write
@@ -296,7 +259,7 @@ int main(int argc, const char * argv[]) {
             output = ""; //switch it back to empty string.
         }
     }
-    
+
     binToAe = clock();
     
     diff = binToAe - binToA;
@@ -395,3 +358,5 @@ int main(int argc, const char * argv[]) {
  cout << e->first #(first is the field for key for C++'s hashtable map class)
  << e->second; #(second is the filed for value for C++'s hashtable map class)
  */
+
+
