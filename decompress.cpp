@@ -13,12 +13,12 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include "Node.hpp"
 #include <cstring>
+#include <bitset>
+#include <ctime>
 
 using namespace std;
 
-vector<Node*> huffTree;
 map<char, int> charFreq;
 map<string, char> huffCodes;
 
@@ -92,7 +92,8 @@ int main(int argc, const char * argv[]) {
     string bitNumber;
     getline(file, bitNumber);
     //cout << bitNumber << endl;
-    //cout << bitNumber << endl;
+    cout << bitNumber << endl;
+    
     int bitNum = stoi(bitNumber);
     if (bitNum % 8 != 0){
         cout << "need to delete stuff at the end" << endl;
