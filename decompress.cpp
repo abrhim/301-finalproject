@@ -5,7 +5,7 @@
 //  Created by Abram Himmer on 4/9/18.
 //  Copyright © 2018 Abram Himmer. All rights reserved.
 //
-
+#include "stdafx.h"
 #include <string>
 #include <map>
 #include <istream>
@@ -21,8 +21,6 @@ using namespace std;
 
 map<char, int> charFreq;
 map<string, char> huffCodes;
-
-
 
 // convert a group of 8 digits to a character
 string ascii_to_bin(char c) {
@@ -93,23 +91,37 @@ int main(int argc, const char * argv[]) {
     getline(file, bitNumber);
     //cout << bitNumber << endl;
     cout << bitNumber << endl;
-    
+   //
     int bitNum = stoi(bitNumber);
     if (bitNum % 8 != 0){
         cout << "need to delete stuff at the end" << endl;
     }
-    char c;
+
     string textOfCodes;
     //ACCOUNT FOR THE 0's AT THE END
     //APPEND THEM BY SUBTRACTING THE DIFF BETWEEN THE ACTUAL LENGTH AND THE GIVEN LENGHT
+    /*
+    char c;
     while (file.get(c)){
         textOfCodes += ascii_to_bin(c);
     }
+     */
+    char* buffer = new char[bitNum/8];
+    file.read(buffer,bitNum);
+    for (int i = 0; i <bitNum/8+1; i++){
+        textOfCodes += ascii_to_bin(buffer[i]);
+    }
+
     //cout << textOfCodes << endl;
     string tmp;
     string actualText;
     
-    for(char c : textOfCodes){
+    cout << bitNum%8 << endl;
+    int n2 = textOfCodes.length();
+    string textOfCodes2 = textOfCodes.substr(0, n2-(8-bitNum%8)); //grab everything but the .txt
+
+    
+    for(char c : textOfCodes2){
         tmp += c;
         if (//huffCodes.count(tmp) != 0){
             huffCodes.find(tmp) != huffCodes.end()){
@@ -118,11 +130,11 @@ int main(int argc, const char * argv[]) {
             tmp = "";
         }
     }
+
     //cout << actualText << endl;
     ofstream ofs; //write to file object
     ofs.open(outfile);//open file with file name
     ofs << actualText;
-    
     file.close();
     ofs.close();
     
