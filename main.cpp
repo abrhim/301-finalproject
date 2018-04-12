@@ -15,9 +15,10 @@
 #include <vector>
 #include "Node.hpp"
 #include <cstring>
+#include <ctime>
+#include <bitset>
 
 using namespace std;
-
 vector<Node*> huffTree;
 map<char, int> charFreq;
 map<char, string> huffCodes;
@@ -177,7 +178,7 @@ int main(int argc, const char * argv[]) {
     string prefix = inputfile.substr(0, n-4); //grab everything but the .txt
     string outfile = prefix + ".zip301"; //append .zip301 to the end of the file
     ofstream ofs; //write to file object
-    ofs.open(outfile);//open file with file name
+    ofs.open(outfile, ios::binary);//open file with file name
     
     //write organized data into file
     for (auto e : huffCodes) {
@@ -261,14 +262,13 @@ int main(int argc, const char * argv[]) {
     }
 
     binToAe = clock();
-    
     diff = binToAe - binToA;
     cout << "binToA: " << ((float)diff/CLOCKS_PER_SEC)<< endl;
     
 
-    endConvert = clock();
-    time_t diffConvert = endConvert - startConvert;
-    cout << "Converting file to binary: " << ((float)diffConvert/CLOCKS_PER_SEC) << endl;
+    //endConvert = clock();
+    //time_t diffConvert = endConvert - startConvert;
+    //cout << "Converting file to binary: " << ((float)diffConvert/CLOCKS_PER_SEC) << endl;
     
     
     
@@ -278,12 +278,9 @@ int main(int argc, const char * argv[]) {
     time_t diffTotal = endTotal - startTotal;
     cout << "Total time: " << ((float)diffTotal/CLOCKS_PER_SEC) << endl;
     
-    
     file.close();
     ofs.close();
     return 0;
-    
-    
 }
 
 
